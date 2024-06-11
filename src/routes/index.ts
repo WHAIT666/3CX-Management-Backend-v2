@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get("/healthcheck", (_, res) => res.sendStatus(200));
 
-router.use(user);
-router.use(auth);
+router.use("/user", user);
+router.use("/auth", auth);
+
 
 export default router;
