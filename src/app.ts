@@ -11,7 +11,6 @@ app.use(express.json());
 
 app.use(router);
 
-
 const port = config.get("port");
 
 app.listen(port, () => {
