@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { nanoid } from "nanoid";
+import { nanoid } from 'nanoid';
 import {
   CreateUserInput,
   ForgotPasswordInput,

@@ -2,12 +2,12 @@ import nodemailer, { SendMailOptions } from "nodemailer";
 import config from "config";
 import log from "./logger";
 
-// async function createTestCreds() {
-//   const creds = await nodemailer.createTestAccount();
-//   console.log({ creds });
-// }
+  async function createTestCreds() {
+  const creds = await nodemailer.createTestAccount();
+   console.log({ creds });
+ }
 
-// createTestCreds();
+ createTestCreds();
 
 const smtp = config.get<{
   user: string;

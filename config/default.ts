@@ -5,8 +5,8 @@ export default {
   accessTokenPrivateKey: "",
   refreshTokenPrivateKey: "",
   smtp: {
-    user: "icqskc5mxzf3bwct@ethereal.email",
-    pass: "mVSU79SbF3WmvGqy4V",
+    user: "ru6xrpubqncf6b3r@ethereal.email",
+    pass: "8Kq95YKPmQRGmAXrBN",
     host: "smtp.ethereal.email",
     port: 587,
     secure: false,
