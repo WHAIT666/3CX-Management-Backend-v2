@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUserHandler,
   forgotPasswordHandler,
+  getCurrentUserHandler,
   resetPasswordHandler,
   verifyUserHandler,
 } from "../controller/user.controller";
@@ -12,6 +13,7 @@ import {
   resetPasswordSchema,
   verifyUserSchema,
 } from "../schema/user.schema";
+import requireUser from "../middleware/requireUser";
 
 const router = express.Router();
 
@@ -39,5 +41,6 @@ router.post(
   resetPasswordHandler
 );
 
+router.get("/api/users/me", requireUser, getCurrentUserHandler);
 
 export default router;

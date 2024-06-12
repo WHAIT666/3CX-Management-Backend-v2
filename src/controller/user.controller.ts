@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import  nanoid  from "nanoid";
+import { nanoid } from "nanoid";
 import {
   CreateUserInput,
   ForgotPasswordInput,
@@ -134,4 +134,8 @@ export async function resetPasswordHandler(
   await user.save();
 
   return res.send("Successfully updated password");
+}
+
+export async function getCurrentUserHandler(req: Request, res: Response) {
+  return res.send(res.locals.user);
 }
