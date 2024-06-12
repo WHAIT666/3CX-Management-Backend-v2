@@ -1,7 +1,5 @@
-import { DocumentType } from "@typegoose/typegoose";
 import { Request, Response } from "express";
 import { get } from "lodash";
-import { User } from "../model/user.model";
 import { CreateSessionInput } from "../schema/auth.schema";
 import {
   findSessionById,
