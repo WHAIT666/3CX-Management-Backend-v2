@@ -32,17 +32,18 @@ export async function createSessionHandler(
     return res.send(message);
   }
 
-  // sign a access token
-  const accessToken = signAccessToken(user);
+  // sign an access token
+  const { accessToken, formattedExpiration: accessTokenExpiration } = signAccessToken(user);
 
   // sign a refresh token
-  const refreshToken = await signRefreshToken({ userId: user._id });
+  const { refreshToken, formattedExpiration: refreshTokenExpiration } = await signRefreshToken({ userId: user._id });
 
-  // send the tokens
-
+  // send the tokens along with expiration times
   return res.send({
     accessToken,
+    accessTokenExpiration,
     refreshToken,
+    refreshTokenExpiration,
   });
 }
 
@@ -70,7 +71,7 @@ export async function refreshAccessTokenHandler(req: Request, res: Response) {
     return res.status(401).send("Could not refresh access token");
   }
 
-  const accessToken = signAccessToken(user);
+  const { accessToken, formattedExpiration: accessTokenExpiration } = signAccessToken(user);
 
-  return res.send({ accessToken });
+  return res.send({ accessToken, accessTokenExpiration });
 }
