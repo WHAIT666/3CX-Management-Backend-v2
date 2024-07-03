@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { createCentral, findCentralById, updateCentral, deleteCentral, getAllCentrals } from "../service/central.service";
+import { getSystemStatus } from "../service/3cx.service";
 
 export async function createCentralHandler(req: Request, res: Response) {
   const userId = res.locals.user._id; // Assumindo que o user ID está disponível aqui
@@ -64,3 +65,13 @@ export async function getAllCentralsHandler(req: Request, res: Response) {
     return res.status(500).send(e);
   }
 }
+
+
+export async function getSystemStatusHandler(req: Request, res: Response) {
+    try {
+      const status = await getSystemStatus();
+      return res.send(status);
+    } catch (e) {
+      return res.status(500).send(e.message);
+    }
+  }
