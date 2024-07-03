@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyJwt } from "../utils/jwt";
+
 const deserializeUser = async (
   req: Request,
   res: Response,
@@ -14,7 +15,7 @@ const deserializeUser = async (
     return next();
   }
 
-  const decoded = verifyJwt(accessToken, "accessTokenPublicKey");
+  const decoded = verifyJwt(accessToken, "accessTokenPublicKey"); // Altere conforme necessário
 
   if (decoded) {
     res.locals.user = decoded;
