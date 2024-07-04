@@ -47,12 +47,12 @@ export async function signRefreshToken({ userId }: { userId: string }) {
 export function signAccessToken(user: DocumentType<User>) {
   const payload = omit(user.toJSON(), privateFields);
 
-  const expiresIn = '15m';
+  const expiresIn = '60m';
   const accessToken = signJwt(payload, "accessTokenPrivateKey", {
     expiresIn,
   });
 
-  const expirationInSeconds = 15 * 60;
+  const expirationInSeconds = 60 * 60;
 
   return {
     accessToken,

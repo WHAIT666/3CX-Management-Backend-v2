@@ -19,3 +19,7 @@ export function deleteCentral(id: string) {
 export function getAllCentrals() {
   return CentralModel.find();
 }
+
+export function findCentralByName(name: string) {
+  return CentralModel.findOne({ name });
+}
