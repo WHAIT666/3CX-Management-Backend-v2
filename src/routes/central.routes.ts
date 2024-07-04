@@ -5,7 +5,8 @@ import {
   updateCentralHandler,
   deleteCentralHandler,
   getAllCentralsHandler,
-  getSystemStatusHandler, // Importa o novo handler
+  getSystemStatusHandler,
+  getExtensionsHandler, // Importa o novo handler
 } from "../controller/central.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
@@ -19,5 +20,6 @@ router.get("/api/centrals/:id", requireUser, getCentralHandler);
 router.put("/api/centrals/:id", requireUser, validateResource(updateCentralSchema), updateCentralHandler);
 router.delete("/api/centrals/:id", requireUser, deleteCentralHandler);
 router.get("/api/systemstatus", requireUser, getSystemStatusHandler); // Nova rota para obter o status do sistema
+router.get("/api/systemextensions", getExtensionsHandler);  // Nova rota para obter extensões
 
 export default router;

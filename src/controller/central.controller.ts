@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import { createCentral, findCentralById, updateCentral, deleteCentral, getAllCentrals, findCentralByName } from "../service/central.service";
-import { getSystemStatus } from "../service/3cx.service";
+import { getSystemStatus, getExtensions } from "../service/3cx.service";  // Certifique-se de importar getExtensions
 
 export async function createCentralHandler(req: Request, res: Response) {
-  const userId = res.locals.user._id; // Assumindo que o user ID está disponível aqui
+  const userId = res.locals.user._id;
   const { name, ipAddress, status } = req.body;
 
   try {
-    // Verifica se já existe uma central com o mesmo nome
     const existingCentral = await findCentralByName(name);
     if (existingCentral) {
       return res.status(409).send({ message: "Central with this name already exists" });
@@ -76,6 +75,15 @@ export async function getSystemStatusHandler(req: Request, res: Response) {
   try {
     const status = await getSystemStatus();
     return res.send(status);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+}
+
+export async function getExtensionsHandler(req: Request, res: Response) {
+  try {
+    const extensions = await getExtensions();
+    return res.send(extensions);
   } catch (e) {
     return res.status(500).send(e.message);
   }

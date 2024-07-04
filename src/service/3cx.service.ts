@@ -20,3 +20,18 @@ export async function getSystemStatus() {
     throw new Error(`Failed to fetch system status: ${error.message}`);
   }
 }
+
+export async function getExtensions() {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/SystemStatus/Pbx.SystemExtensions()`, {
+      headers: {
+        Authorization: `Bearer ${process.env.THREE_CX_API_KEY}`,
+        Accept: "application/json",
+      },
+      httpsAgent,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch extensions: ${error.message}`);
+  }
+}
