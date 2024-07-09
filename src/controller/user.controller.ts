@@ -10,9 +10,11 @@ import {
   createUser,
   findUserByEmail,
   findUserById,
+  getAllUsers, // Ensure this function is implemented in the service layer
 } from "../service/user.service";
 import log from "../utils/logger";
-import  sendEmail  from "../utils/mailer";
+import sendEmail from "../utils/mailer";
+import { Roles } from "../utils/roles";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -21,7 +23,7 @@ export async function createUserHandler(
   const body = req.body;
 
   try {
-    const user = await createUser(body);
+    const user = await createUser({ ...body, role: Roles.User });
 
     await sendEmail({
       to: user.email,
@@ -47,24 +49,19 @@ export async function verifyUserHandler(
   const id = req.params.id;
   const verificationCode = req.params.verificationCode;
 
-  // find the user by id
   const user = await findUserById(id);
 
   if (!user) {
     return res.send("Could not verify user");
   }
 
-  // check to see if they are already verified
   if (user.verified) {
     return res.send("User is already verified");
   }
 
-  // check to see if the verificationCode matches
   if (user.verificationCode === verificationCode) {
     user.verified = true;
-
     await user.save();
-
     return res.send("User successfully verified");
   }
 
@@ -75,8 +72,7 @@ export async function forgotPasswordHandler(
   req: Request<{}, {}, ForgotPasswordInput>,
   res: Response
 ) {
-  const message =
-    "If a user with that email is registered you will receive a password reset email";
+  const message = "If a user with that email is registered you will receive a password reset email";
 
   const { email } = req.body;
 
@@ -114,23 +110,16 @@ export async function resetPasswordHandler(
   res: Response
 ) {
   const { id, passwordResetCode } = req.params;
-
   const { password } = req.body;
 
   const user = await findUserById(id);
 
-  if (
-    !user ||
-    !user.passwordResetCode ||
-    user.passwordResetCode !== passwordResetCode
-  ) {
+  if (!user || !user.passwordResetCode || user.passwordResetCode !== passwordResetCode) {
     return res.status(400).send("Could not reset user password");
   }
 
   user.passwordResetCode = null;
-
   user.password = password;
-
   await user.save();
 
   return res.send("Successfully updated password");
@@ -138,4 +127,9 @@ export async function resetPasswordHandler(
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
   return res.send(res.locals.user);
+}
+
+export async function getAllUsersHandler(req: Request, res: Response) {
+  const users = await getAllUsers(); // Ensure this function is implemented in the service layer
+  return res.send(users);
 }

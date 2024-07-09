@@ -17,7 +17,11 @@ export async function createSession({ userId }: { userId: string }) {
 }
 
 export async function findSessionById(id: string) {
-  return SessionModel.findById(id);
+  return SessionModel.findById(id).where("valid").equals(true);
+}
+
+export async function invalidateSession(sessionId: string) {
+  return SessionModel.updateOne({ _id: sessionId }, { valid: false });
 }
 
 export async function signRefreshToken({ userId }: { userId: string }) {
@@ -40,7 +44,7 @@ export async function signRefreshToken({ userId }: { userId: string }) {
 
   return {
     refreshToken,
-    formattedExpiration: formatExpirationTime(expirationInSeconds)
+    formattedExpiration: formatExpirationTime(expirationInSeconds),
   };
 }
 
@@ -56,6 +60,6 @@ export function signAccessToken(user: DocumentType<User>) {
 
   return {
     accessToken,
-    formattedExpiration: formatExpirationTime(expirationInSeconds)
+    formattedExpiration: formatExpirationTime(expirationInSeconds),
   };
 }

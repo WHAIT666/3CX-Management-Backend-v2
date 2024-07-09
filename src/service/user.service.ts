@@ -11,3 +11,7 @@ export function findUserById(id: string) {
 export function findUserByEmail(email: string) {
   return UserModel.findOne({ email });
 }
+
+export function getAllUsers() {
+  return UserModel.find(); // Fetches all users from the database
+}

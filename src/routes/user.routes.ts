@@ -5,6 +5,7 @@ import {
   getCurrentUserHandler,
   resetPasswordHandler,
   verifyUserHandler,
+  getAllUsersHandler
 } from "../controller/user.controller";
 import validateResource from "../middleware/validateResource";
 import {
@@ -14,6 +15,8 @@ import {
   verifyUserSchema,
 } from "../schema/user.schema";
 import requireUser from "../middleware/requireUser";
+import requireRole from "../middleware/requireRole";
+import { Roles } from "../utils/roles";
 
 const router = express.Router();
 
@@ -42,5 +45,8 @@ router.post(
 );
 
 router.get("/api/users/me", requireUser, getCurrentUserHandler);
+
+// Example admin route
+router.get("/api/admin/users", requireUser, requireRole(Roles.Admin), getAllUsersHandler);
 
 export default router;

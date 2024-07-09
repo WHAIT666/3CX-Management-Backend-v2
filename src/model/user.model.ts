@@ -10,6 +10,7 @@ import {
 import { nanoid } from "nanoid";
 import argon2 from "argon2";
 import log from "../utils/logger";
+import { Roles } from "../utils/roles";
 
 export const privateFields = [
   "password",
@@ -60,6 +61,9 @@ export class User {
 
   @prop({ default: false })
   verified: boolean;
+
+  @prop({ enum: Roles, required: true, type: String, default: Roles.User })
+  role: Roles;
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
