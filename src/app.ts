@@ -32,3 +32,5 @@ app.listen(port, () => {
   log.info(`App started at http://localhost:${port}`);
   connectToDb();
 });
+
+export default app;  // Ensure the app is exported as default

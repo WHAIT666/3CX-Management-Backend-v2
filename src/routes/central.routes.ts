@@ -21,7 +21,7 @@ router.get("/api/centrals", requireUser, requireRole(Roles.Admin), getAllCentral
 router.get("/api/centrals/:id", requireUser, requireRole(Roles.Admin), getCentralHandler);
 router.put("/api/centrals/:id", requireUser, requireRole(Roles.Admin), validateResource(updateCentralSchema), updateCentralHandler);
 router.delete("/api/centrals/:id", requireUser, requireRole(Roles.Admin), deleteCentralHandler);
-router.get("/api/systemstatus", requireUser, requireRole(Roles.Admin), getSystemStatusHandler);
-router.get("/api/systemextensions", requireUser, requireRole(Roles.Admin), getExtensionsHandler);
+router.get("/api/systemstatus", requireUser, requireRole(Roles.Admin), getSystemStatusHandler); // Protecting this route
+router.get("/api/systemextensions", requireUser, requireRole(Roles.Admin), getExtensionsHandler); // Protecting this route
 
 export default router;
