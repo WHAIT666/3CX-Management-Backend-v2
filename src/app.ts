@@ -6,6 +6,8 @@ import connectToDb from './utils/connectToDb';
 import log from './utils/logger';
 import router from './routes';
 import deserializeUser from './middleware/deserializeUser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './utils/swagger-spec';  // Import the swagger spec
 
 const app = express();
 
@@ -26,6 +28,9 @@ app.use(deserializeUser);
 
 app.use(router);
 
+// Swagger setup
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const port = config.get('port');
 
 app.listen(port, () => {
@@ -33,4 +38,4 @@ app.listen(port, () => {
   connectToDb();
 });
 
-export default app;  // Ensure the app is exported as default
+export default app;

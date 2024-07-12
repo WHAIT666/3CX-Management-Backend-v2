@@ -17,6 +17,7 @@ export const privateFields = [
   "__v",
   "verificationCode",
   "passwordResetCode",
+  "passwordResetExpiry",
   "verified",
 ];
 
@@ -58,6 +59,9 @@ export class User {
 
   @prop()
   passwordResetCode: string | null;
+
+  @prop()
+  passwordResetExpiry: Date | null;
 
   @prop({ default: false })
   verified: boolean;

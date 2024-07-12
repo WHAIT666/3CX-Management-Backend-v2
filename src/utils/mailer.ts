@@ -1,25 +1,22 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
-import config from "config";
 import log from "./logger";
 
-  async function createTestCreds() {
-  const creds = await nodemailer.createTestAccount();
-   console.log({ creds });
- }
-
- createTestCreds();
-
-const smtp = config.get<{
-  user: string;
-  pass: string;
-  host: string;
-  port: number;
-  secure: boolean;
-}>("smtp");
+const smtp = {
+  user: process.env.SMTP_USER,
+  pass: process.env.SMTP_PASS,
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+};
 
 const transporter = nodemailer.createTransport({
-  ...smtp,
-  auth: { user: smtp.user, pass: smtp.pass },
+  host: smtp.host,
+  port: smtp.port,
+  secure: smtp.secure, // true for 465, false for other ports
+  auth: {
+    user: smtp.user,
+    pass: smtp.pass,
+  },
 });
 
 async function sendEmail(payload: SendMailOptions) {
@@ -28,8 +25,7 @@ async function sendEmail(payload: SendMailOptions) {
       log.error(err, "Error sending email");
       return;
     }
-
-    log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    log.info(`Message sent: ${info.messageId}`);
   });
 }
 
