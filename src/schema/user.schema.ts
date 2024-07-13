@@ -1,65 +1,47 @@
-import { object, string, TypeOf } from "zod";
+// src/schema/user.schema.ts
+import { z } from 'zod';
 
-export const createUserSchema = object({
-  body: object({
-    firstName: string({
-      required_error: "First name is required",
-    }),
-    lastName: string({
-      required_error: "Last name is required",
-    }),
-    password: string({
-      required_error: "Password is required",
-    }).min(6, "Password is too short - should be min 6 chars"),
-    passwordConfirmation: string({
-      required_error: "Password confirmation is required",
-    }),
-    email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
-  }).refine((data) => data.password === data.passwordConfirmation, {
+export const createUserSchema = z.object({
+  body: z.object({
+    firstName: z.string().nonempty({ message: "First name is required" }),
+    lastName: z.string().nonempty({ message: "Last name is required" }),
+    email: z.string().email({ message: "Invalid email" }).nonempty({ message: "Email is required" }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters long" }).nonempty({ message: "Password is required" }),
+    passwordConfirmation: z.string().nonempty({ message: "Password confirmation is required" }),
+  }).refine(data => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
     path: ["passwordConfirmation"],
   }),
 });
 
-export const verifyUserSchema = object({
-  params: object({
-    id: string(),
-    verificationCode: string(),
+export const verifyUserSchema = z.object({
+  params: z.object({
+    id: z.string().nonempty({ message: "ID is required" }),
+    verificationCode: z.string().nonempty({ message: "Verification code is required" }),
   }),
 });
 
-export const forgotPasswordSchema = object({
-  body: object({
-    email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
+export const forgotPasswordSchema = z.object({
+  body: z.object({
+    email: z.string().email({ message: "Invalid email" }).nonempty({ message: "Email is required" }),
   }),
 });
 
-export const resetPasswordSchema = object({
-  params: object({
-    id: string(),
-    passwordResetCode: string(),
+export const resetPasswordSchema = z.object({
+  params: z.object({
+    id: z.string().nonempty({ message: "ID is required" }),
+    passwordResetCode: z.string().nonempty({ message: "Password reset code is required" }),
   }),
-  body: object({
-    password: string({
-      required_error: "Password is required",
-    }).min(6, "Password is too short - should be min 6 chars"),
-    passwordConfirmation: string({
-      required_error: "Password confirmation is required",
-    }),
-  }).refine((data) => data.password === data.passwordConfirmation, {
+  body: z.object({
+    password: z.string().min(6, { message: "Password must be at least 6 characters long" }).nonempty({ message: "Password is required" }),
+    passwordConfirmation: z.string().nonempty({ message: "Password confirmation is required" }),
+  }).refine(data => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
     path: ["passwordConfirmation"],
   }),
 });
 
-export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
-
-export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];
-
-export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>["body"];
-
-export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+export type CreateUserInput = z.infer<typeof createUserSchema>["body"];
+export type VerifyUserInput = z.infer<typeof verifyUserSchema>["params"];
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>["body"];
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

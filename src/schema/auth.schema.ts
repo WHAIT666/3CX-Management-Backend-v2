@@ -1,14 +1,11 @@
-import { object, string, TypeOf } from "zod";
+// src/schema/auth.schema.ts
+import { z } from 'zod';
 
-export const createSessionSchema = object({
-  body: object({
-    email: string({
-      required_error: "Email is required",
-    }).email("Invalid email or password"),
-    password: string({
-      required_error: "Password is required",
-    }).min(6, "Invalid email or password"),
+export const createSessionSchema = z.object({
+  body: z.object({
+    email: z.string().email({ message: "Invalid email" }).nonempty({ message: "Email is required" }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters long" }).nonempty({ message: "Password is required" }),
   }),
 });
 
-export type CreateSessionInput = TypeOf<typeof createSessionSchema>["body"];
+export type CreateSessionInput = z.infer<typeof createSessionSchema>["body"];
