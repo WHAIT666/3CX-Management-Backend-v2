@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import config from 'config';
 import cors from 'cors';
@@ -6,11 +7,12 @@ import log from './utils/logger';
 import router from './routes';
 import deserializeUser from './middleware/deserializeUser';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../src/utils/swagger-spec';
+import swaggerDocument from './utils/swagger-spec';
+
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // Update this with your frontend URL
+  origin: 'http://localhost:5173',
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
 };
