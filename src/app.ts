@@ -1,4 +1,3 @@
-require('dotenv').config();
 import express from 'express';
 import config from 'config';
 import cors from 'cors';
@@ -7,8 +6,7 @@ import log from './utils/logger';
 import router from './routes';
 import deserializeUser from './middleware/deserializeUser';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './utils/swagger-spec';  // Import the swagger spec
-
+import swaggerDocument from '../src/utils/swagger-spec';
 const app = express();
 
 const corsOptions = {
@@ -28,13 +26,15 @@ app.use(deserializeUser);
 
 app.use(router);
 
-// Swagger setup
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Setup Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 const port = config.get('port');
 
 app.listen(port, () => {
   log.info(`App started at http://localhost:${port}`);
+  log.info(`Swagger docs available at http://localhost:${port}/api-docs`);
   connectToDb();
 });
 
