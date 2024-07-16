@@ -13,10 +13,12 @@ const app = express();
 
 const corsOptions = {
   origin: 'http://localhost:5173',
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', '3cxAccessToken'],
+  credentials: true, // If you need to pass cookies or HTTP authentication
 };
 
+// Use CORS middleware
 app.use(cors(corsOptions));
 
 // Handle preflight requests
@@ -30,7 +32,6 @@ app.use(router);
 
 // Setup Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 
 const port = config.get('port');
 

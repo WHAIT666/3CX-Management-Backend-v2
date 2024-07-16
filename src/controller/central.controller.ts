@@ -73,18 +73,26 @@ export async function getAllCentralsHandler(req: Request, res: Response) {
 
 export async function getSystemStatusHandler(req: Request, res: Response) {
   try {
-    const status = await getSystemStatus();
-    return res.send(status);
-  } catch (e) {
-    return res.status(500).send(e.message);
+    const token = req.headers['3cxaccesstoken'];
+    if (!token) {
+      return res.status(401).json({ message: 'No access token found in request headers' });
+    }
+    const data = await getSystemStatus(token as string); // Pass the token to the service function
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to fetch system status: ${error.message}` });
   }
 }
 
 export async function getExtensionsHandler(req: Request, res: Response) {
   try {
-    const extensions = await getExtensions();
-    return res.send(extensions);
-  } catch (e) {
-    return res.status(500).send(e.message);
+    const token = req.headers['3cxaccesstoken'];
+    if (!token) {
+      return res.status(401).json({ message: 'No access token found in request headers' });
+    }
+    const data = await getExtensions(token as string); // Pass the token to the service function
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to fetch extensions: ${error.message}` });
   }
 }
