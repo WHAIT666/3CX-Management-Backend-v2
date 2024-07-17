@@ -1,4 +1,5 @@
-// src/routes/user.routes.ts
+// user.routes.ts
+
 import express from 'express';
 import {
   createUserHandler,
@@ -6,7 +7,9 @@ import {
   getCurrentUserHandler,
   resetPasswordHandler,
   verifyUserHandler,
-  getAllUsersHandler
+  getAllUsersHandler,
+  getUsersFrom3CXHandler,
+  delete3CXUserHandler,
 } from '../controller/user.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -27,5 +30,7 @@ router.post("/api/users/forgotpassword", validateResource(forgotPasswordSchema),
 router.post("/api/users/resetpassword/:id/:passwordResetCode", validateResource(resetPasswordSchema), resetPasswordHandler);
 router.get("/api/users/me", requireUser, getCurrentUserHandler);
 router.get("/api/admin/users", requireUser, requireRole(Roles.Admin), getAllUsersHandler);
+router.get("/api/users/3cx", requireUser, requireRole(Roles.Admin), getUsersFrom3CXHandler);
+router.delete("/api/users/3cx/:id", requireUser, requireRole(Roles.Admin), delete3CXUserHandler);
 
 export default router;

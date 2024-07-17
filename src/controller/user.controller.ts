@@ -1,3 +1,5 @@
+// user.controller.ts
+
 import { Request, Response } from "express";
 import { nanoid } from 'nanoid';
 import {
@@ -10,11 +12,12 @@ import {
   createUser,
   findUserByEmail,
   findUserById,
-  getAllUsers, // Ensure this function is implemented in the service layer
+  getAllUsers,
 } from "../service/user.service";
 import log from "../utils/logger";
 import sendEmail from "../utils/mailer";
 import { Roles } from "../utils/roles";
+import { get3CXUsers, delete3CXUser, create3CXUser } from '../service/3cx.service';
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -187,3 +190,31 @@ export async function getAllUsersHandler(req: Request, res: Response) {
   const users = await getAllUsers(); // Ensure this function is implemented in the service layer
   return res.send(users);
 }
+
+export async function getUsersFrom3CXHandler(req: Request, res: Response) {
+  try {
+    const token = req.headers['3cxaccesstoken'] as string;
+    if (!token) {
+      return res.status(401).json({ message: 'No access token found in request headers' });
+    }
+    const users = await get3CXUsers(token);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to fetch users from 3CX: ${error.message}` });
+  }
+}
+
+export async function delete3CXUserHandler(req: Request, res: Response) {
+  try {
+    const token = req.headers['3cxaccesstoken'] as string;
+    const { id } = req.params;
+    if (!token) {
+      return res.status(401).json({ message: 'No access token found in request headers' });
+    }
+    await delete3CXUser(token, id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to delete user from 3CX: ${error.message}` });
+  }
+}
+
