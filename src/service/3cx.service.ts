@@ -3,7 +3,7 @@
 import axios from "axios";
 import https from "https";
 
-const API_BASE_URL = "https://172.31.0.139/xapi/v1";
+const API_BASE_URL = "https://172.28.0.7/xapi/v1";
 
 // Create an HTTPS agent that ignores SSL certificate verification
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });

@@ -150,6 +150,12 @@ export async function forgotPasswordHandler(
   return res.send(message);
 }
 
+// user.controller.ts
+import { Request, Response } from "express";
+import { ResetPasswordInput } from "../schema/user.schema";
+import { findUserById } from "../service/user.service";
+import log from "../utils/logger";
+
 export async function resetPasswordHandler(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
@@ -181,6 +187,7 @@ export async function resetPasswordHandler(
 
   return res.send("Successfully updated password");
 }
+
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
   return res.send(res.locals.user);
