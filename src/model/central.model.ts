@@ -11,7 +11,17 @@ export class Central {
   status: string;
 
   @prop({ required: true })
-  userId: string; // Este campo é obrigatório e será preenchido pelo controlador
+  userId: string;
+
+  // New fields for 3CX credentials
+  @prop({ required: true })
+  fqdnUrl: string;
+
+  @prop({ required: true })
+  usernameOrCode: string;
+
+  @prop({ required: true })
+  password: string; // Ideally, this should be encrypted
 }
 
 const CentralModel = getModelForClass(Central);
