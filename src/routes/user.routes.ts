@@ -1,5 +1,3 @@
-// user.routes.ts
-
 import express from 'express';
 import {
   createUserHandler,
