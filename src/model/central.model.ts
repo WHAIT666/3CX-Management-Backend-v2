@@ -1,5 +1,3 @@
-// central.model.ts
-
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
 export class Central {

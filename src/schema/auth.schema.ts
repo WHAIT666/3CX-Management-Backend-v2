@@ -1,4 +1,3 @@
-// src/schema/auth.schema.ts
 import { z } from 'zod';
 
 export const createSessionSchema = z.object({
