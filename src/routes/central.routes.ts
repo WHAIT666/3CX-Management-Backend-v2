@@ -7,6 +7,7 @@ import {
   getAllCentralsHandler,
   getSystemStatusHandler,
   getExtensionsHandler,
+  getAggregatedSystemStatusHandler,  // New handler
 } from "../controller/central.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
@@ -23,5 +24,6 @@ router.put("/api/centrals/:id", requireUser, requireRole(Roles.Admin), validateR
 router.delete("/api/centrals/:id", requireUser, requireRole(Roles.Admin), deleteCentralHandler);
 router.get("/api/systemstatus", requireUser, requireRole(Roles.Admin), getSystemStatusHandler); // Protecting this route
 router.get("/api/systemextensions", requireUser, requireRole(Roles.Admin), getExtensionsHandler); // Protecting this route
+router.get("/api/aggregatedsystemstatus", requireUser, requireRole(Roles.Admin), getAggregatedSystemStatusHandler); // New route
 
 export default router;

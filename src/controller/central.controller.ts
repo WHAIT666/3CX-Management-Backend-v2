@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createCentral, findCentralById, updateCentral, deleteCentral, getAllCentrals, findCentralByName } from "../service/central.service";
+import { createCentral, findCentralById, updateCentral, deleteCentral, getAllCentrals, findCentralByName, getAggregatedSystemStatus  } from "../service/central.service";
 import { getSystemStatus, getExtensions } from "../service/3cx.service";  // Certifique-se de importar getExtensions
 
 export async function createCentralHandler(req: Request, res: Response) {
@@ -81,6 +81,15 @@ export async function getSystemStatusHandler(req: Request, res: Response) {
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: `Failed to fetch system status: ${error.message}` });
+  }
+}
+
+export async function getAggregatedSystemStatusHandler(req: Request, res: Response) {
+  try {
+    const data = await getAggregatedSystemStatus();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to fetch aggregated system status: ${error.message}` });
   }
 }
 
