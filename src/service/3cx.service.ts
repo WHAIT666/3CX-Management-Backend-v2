@@ -1,5 +1,3 @@
-// 3cx.service.ts
-
 import axios from "axios";
 import https from "https";
 

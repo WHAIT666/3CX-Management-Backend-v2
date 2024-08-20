@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { object, string } from "zod";
 
 export const createCentralSchema = object({
   body: object({
@@ -11,6 +11,15 @@ export const createCentralSchema = object({
     status: string({
       required_error: "Status is required",
     }),
+    fqdnUrl: string({
+      required_error: "FQDN URL is required",
+    }),
+    usernameOrCode: string({
+      required_error: "Username or Code is required",
+    }),
+    password: string({
+      required_error: "Password is required",
+    }),
   }),
 });
 
@@ -19,6 +28,9 @@ export const updateCentralSchema = object({
     name: string().optional(),
     ipAddress: string().optional(),
     status: string().optional(),
+    fqdnUrl: string().optional(),
+    usernameOrCode: string().optional(),
+    password: string().optional(),
   }),
 });
 
