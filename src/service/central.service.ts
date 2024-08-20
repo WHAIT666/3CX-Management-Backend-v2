@@ -36,9 +36,20 @@ export function findCentralByName(name: string) {
 
 export async function getAggregatedSystemStatus() {
   const centrals = await CentralModel.find({ status: 'Active' });
-  let totalExtensions = 0;
-  let totalTrunks = 0;
-  let activeCalls = 0;
+  let aggregatedStatus = {
+    FQDN: '',
+    Version: '',
+    Activated: false,
+    MaxSimCalls: 0,
+    MaxSimMeetingParticipants: 0,
+    ExtensionsRegistered: 0,
+    ExtensionsTotal: 0,
+    TrunksRegistered: 0,
+    TrunksTotal: 0,
+    CallsActive: 0,
+    BackupScheduled: false,
+    AutoUpdateEnabled: false,
+  };
 
   for (const central of centrals) {
     const { ipAddress, usernameOrCode, password, securityCode } = central;
@@ -46,15 +57,12 @@ export async function getAggregatedSystemStatus() {
     let token = tokenCache.get(ipAddress);
     if (!token) {
       try {
-        // Get new token
         const tokenResponse = await axios.post(`https://${ipAddress}/webclient/api/Login/GetAccessToken`, {
           SecurityCode: securityCode,
           Password: password,
           Username: usernameOrCode
         }, { httpsAgent });
         
-        console.log("Token Response for IP", ipAddress, tokenResponse.data);
-
         if (tokenResponse.status !== 200) {
           throw new Error(`Failed to get token for central at ${ipAddress}`);
         }
@@ -62,12 +70,11 @@ export async function getAggregatedSystemStatus() {
         tokenCache.set(ipAddress, token); // Cache the token
       } catch (error) {
         console.error(`Error fetching token for central at ${ipAddress}:`, error.message);
-        throw error;
+        continue; // Skip to the next central instead of throwing
       }
     }
 
     try {
-      // Get system status using the token
       const statusResponse = await axios.get(`https://${ipAddress}/xapi/v1/SystemStatus`, {
         headers: { Authorization: `Bearer ${token}` },
         httpsAgent
@@ -75,14 +82,24 @@ export async function getAggregatedSystemStatus() {
       const statusData = statusResponse.data;
 
       // Aggregate data
-      totalExtensions += statusData.ExtensionsTotal;
-      totalTrunks += statusData.TrunksTotal;
-      activeCalls += statusData.CallsActive;
+      aggregatedStatus.FQDN = statusData.FQDN;
+      aggregatedStatus.Version = statusData.Version;
+      aggregatedStatus.Activated = statusData.Activated;
+      aggregatedStatus.MaxSimCalls += statusData.MaxSimCalls;
+      aggregatedStatus.MaxSimMeetingParticipants += statusData.MaxSimMeetingParticipants;
+      aggregatedStatus.ExtensionsRegistered += statusData.ExtensionsRegistered;
+      aggregatedStatus.ExtensionsTotal += statusData.ExtensionsTotal;
+      aggregatedStatus.TrunksRegistered += statusData.TrunksRegistered;
+      aggregatedStatus.TrunksTotal += statusData.TrunksTotal;
+      aggregatedStatus.CallsActive += statusData.CallsActive;
+      aggregatedStatus.BackupScheduled = statusData.BackupScheduled;
+      aggregatedStatus.AutoUpdateEnabled = statusData.AutoUpdateEnabled;
+      
     } catch (error) {
       console.error(`Error fetching system status for central at ${ipAddress}:`, error.message);
-      throw error;
+      continue; // Skip to the next central instead of throwing
     }
   }
 
-  return { totalExtensions, totalTrunks, activeCalls };
+  return aggregatedStatus;
 }
