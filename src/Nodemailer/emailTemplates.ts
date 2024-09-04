@@ -5,28 +5,91 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verify Your Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000000; /* Black background for the entire email */
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      width: 100%;
+    }
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #1e1e1e; /* Dark card background */
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      background: #FFA500; /* Orange gradient background */
+      border-radius: 8px 8px 0 0;
+    }
+    .header h1 {
+      color: #ffffff;
+      font-size: 24px;
+      margin: 0;
+    }
+    .content {
+      background-color: #2b2b2b; /* Slightly lighter black for content */
+      padding: 20px;
+      border-radius: 0 0 8px 8px;
+    }
+    .content p {
+      color: #cccccc;
+      margin: 0 0 10px;
+    }
+    .verification-code {
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 5px;
+      color: #FFA500; /* Orange text for the verification code */
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #777777;
+      font-size: 12px;
+    }
+    .footer p {
+      margin: 0;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Verify Your Email</h1>
-  </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <p>Thank you for signing up! Your verification code is:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">{verificationCode}</span>
+<body>
+  <div class="email-container">
+    <!-- Header section -->
+    <div class="header">
+      <h1>Verify Your Email</h1>
     </div>
-    <p>Enter this code on the verification page to complete your registration.</p>
-    <p>This code will expire in 15 minutes for security reasons.</p>
-    <p>If you didn't create an account with us, please ignore this email.</p>
-    <p>Best regards,<br>Your App Team</p>
-  </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+    
+    <!-- Content section -->
+    <div class="content">
+      <p>Hello,</p>
+      <p>Thank you for signing up! Your verification code is:</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <span class="verification-code">{verificationCode}</span>
+      </div>
+      <p>Enter this code on the verification page to complete your registration.</p>
+      <p>This code will expire in 15 minutes for security reasons.</p>
+      <p>If you didn't create an account with us, please ignore this email.</p>
+      <p>Best regards,<br>Techbase Team</p>
+    </div>
+
+    <!-- Footer section -->
+    <div class="footer">
+      <p>This is an automated message, please do not reply to this email.</p>
+    </div>
   </div>
 </body>
 </html>
 `;
+
 
 export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
 <!DOCTYPE html>
