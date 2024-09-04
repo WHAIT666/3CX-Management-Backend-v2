@@ -185,12 +185,12 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 // Reset Password Controller
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { token } = req.params;
-        const { password } = req.body;
+        const { token } = req.params; // Get the reset token from the URL
+        const { password } = req.body; // Get the new password from the request body
 
         const user = await User.findOne({
-            resetPasswordToken: token,
-            resetPasswordExpiresAt: { $gt: Date.now() },
+            resetPasswordToken: token, // Check if the token exists and is valid
+            resetPasswordExpiresAt: { $gt: Date.now() }, // Ensure the token hasn't expired
         });
 
         if (!user) {
@@ -199,21 +199,23 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
             return;
         }
 
+        // Hash the new password
         const hashedPassword = await bcryptjs.hash(password, 10);
 
+        // Update the user with the new password and clear the reset token fields
         user.password = hashedPassword;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpiresAt = undefined;
         await user.save();
 
-        console.log("Password reset successful for user:", user);
-
+        // Send success email (optional)
         await sendResetSuccessEmail(user.email);
 
+        console.log("Password reset successful for user:", user);
         res.status(200).json({ success: true, message: "Password reset successful" });
     } catch (error) {
         console.error("Error in resetPassword:", (error as Error).message);
-        res.status(400).json({ success: false, message: (error as Error).message });
+        res.status(400).json({ success: false, message: "Error resetting password" });
     }
 };
 
