@@ -1,16 +1,15 @@
 import express from 'express';
-import {
-  createSessionHandler,
-  refreshAccessTokenHandler,
-  logoutHandler
-} from "../controller/auth.controller";
-import validateResource from '../middleware/validateResource';
-import { createSessionSchema } from '../schema/auth.schema';
+import { signup, verifyEmail, login, logout, forgotPassword, resetPassword, checkAuth } from '../controllers/auth.controller';
+import { verifyToken } from "../middlewares/verifyToken";
 
 const router = express.Router();
 
-router.post("/api/auth/login", validateResource(createSessionSchema), createSessionHandler);
-router.post("/api/auth/refresh-token", refreshAccessTokenHandler);
-router.post("/api/auth/logout", logoutHandler);
+router.post("/signup", signup);
+router.post("/verify-email", verifyEmail);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
+router.get("/check-auth", verifyToken, checkAuth);
 
 export default router;

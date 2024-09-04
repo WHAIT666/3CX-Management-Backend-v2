@@ -7,23 +7,24 @@ import {
   getAllCentralsHandler,
   getSystemStatusHandler,
   getExtensionsHandler,
-  getAggregatedSystemStatusHandler,  // New handler
-} from "../controller/central.controller";
-import requireUser from "../middleware/requireUser";
-import validateResource from "../middleware/validateResource";
-import requireRole from "../middleware/requireRole";
+  getAggregatedSystemStatusHandler, 
+} from "../controllers/central.controller";
+import validateResource from "../middlewares/validateResource";
 import { createCentralSchema, updateCentralSchema } from "../schema/central.schema";
-import { Roles } from "../utils/roles";
+import { verifyToken } from "../middlewares/verifyToken";  // Import the verifyToken middleware
 
 const router = express.Router();
 
-router.post("/api/centrals", requireUser, requireRole(Roles.Admin), validateResource(createCentralSchema), createCentralHandler);
-router.get("/api/centrals", requireUser, requireRole(Roles.Admin), getAllCentralsHandler);
-router.get("/api/centrals/:id", requireUser, requireRole(Roles.Admin), getCentralHandler);
-router.put("/api/centrals/:id", requireUser, requireRole(Roles.Admin), validateResource(updateCentralSchema), updateCentralHandler);
-router.delete("/api/centrals/:id", requireUser, requireRole(Roles.Admin), deleteCentralHandler);
-router.get("/api/systemstatus", requireUser, requireRole(Roles.Admin), getSystemStatusHandler); // Protecting this route
-router.get("/api/systemextensions", requireUser, requireRole(Roles.Admin), getExtensionsHandler); // Protecting this route
-router.get("/api/aggregatedsystemstatus", requireUser, requireRole(Roles.Admin), getAggregatedSystemStatusHandler); // New route
+// Protected routes: require the user to be authenticated
+router.post("/centrals", verifyToken, validateResource(createCentralSchema), createCentralHandler);
+router.get("/centrals", verifyToken, getAllCentralsHandler);
+router.get("/centrals/:id", verifyToken, getCentralHandler);
+router.put("/centrals/:id", verifyToken, validateResource(updateCentralSchema), updateCentralHandler);
+router.delete("/centrals/:id", verifyToken, deleteCentralHandler);
+
+// System and extensions status routes
+router.get("/systemstatus", verifyToken, getSystemStatusHandler); 
+router.get("/systemextensions", verifyToken, getExtensionsHandler); 
+router.get("/aggregatedsystemstatus", verifyToken, getAggregatedSystemStatusHandler); 
 
 export default router;

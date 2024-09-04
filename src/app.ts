@@ -1,36 +1,32 @@
-import 'dotenv/config';
 import express from 'express';
 import config from 'config';
 import cors from 'cors';
+import cookieParser from 'cookie-parser'; // Import cookie-parser
 import connectToDb from './utils/connectToDb';
 import log from './utils/logger';
-import router from './routes';
-import deserializeUser from './middleware/deserializeUser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './utils/swagger-spec';
+import authRoutes from './routes/auth.routes';
+import centralRoutes from './routes/central.routes';
 
 const app = express();
+
+app.use(cookieParser()); // Use cookie-parser middleware
 
 const corsOptions = {
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', '3cxAccessToken'],
-  credentials: true, // If you need to pass cookies or HTTP authentication
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
-// Use CORS middleware
 app.use(cors(corsOptions));
-
-// Handle preflight requests
 app.options('*', cors(corsOptions));
-
 app.use(express.json());
 
-app.use(deserializeUser);
+app.use('/api/auth', authRoutes);
+app.use('/api', centralRoutes);
 
-app.use(router);
-
-// Setup Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = config.get('port');

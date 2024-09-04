@@ -1,5 +1,5 @@
 import https from 'https';
-import CentralModel, { Central } from "../model/central.model";
+import CentralModel, { Central } from "../models/central.model";
 import axios from "axios";
 import NodeCache from "node-cache";
 
@@ -10,30 +10,83 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
-export function createCentral(input: Partial<Central>) {
-  return CentralModel.create(input);
+// Create a new central
+export async function createCentral(input: Partial<Central>) {
+  console.log('Creating central in DB with data:', input); 
+  try {
+    const central = await CentralModel.create(input);
+    console.log('Central created in DB:', central);
+    return central;
+  } catch (error) {
+    console.error('Error creating central in DB:', error.message);
+    throw error;
+  }
 }
 
-export function findCentralById(id: string) {
-  return CentralModel.findById(id);
+// Find a central by ID
+export async function findCentralById(id: string) {
+  try {
+    const central = await CentralModel.findById(id);
+    console.log('Central found by ID:', central);
+    return central;
+  } catch (error) {
+    console.error('Error finding central by ID:', error.message);
+    throw error;
+  }
 }
 
-export function updateCentral(id: string, update: Partial<Central>) {
-  return CentralModel.findByIdAndUpdate(id, update, { new: true });
+// Update a central by ID
+export async function updateCentral(id: string, update: Partial<Central>) {
+  console.log('Updating central with ID:', id);
+  console.log('Update data:', update);
+  try {
+    const central = await CentralModel.findByIdAndUpdate(id, update, { new: true });
+    console.log('Central updated:', central);
+    return central;
+  } catch (error) {
+    console.error('Error updating central:', error.message);
+    throw error;
+  }
 }
 
-export function deleteCentral(id: string) {
-  return CentralModel.findByIdAndDelete(id);
+// Delete a central by ID
+export async function deleteCentral(id: string) {
+  console.log('Deleting central with ID:', id);
+  try {
+    const central = await CentralModel.findByIdAndDelete(id);
+    console.log('Central deleted:', central);
+    return central;
+  } catch (error) {
+    console.error('Error deleting central:', error.message);
+    throw error;
+  }
 }
 
-export function getAllCentrals() {
-  return CentralModel.find();
+// Get all centrals
+export async function getAllCentrals() {
+  try {
+    const centrals = await CentralModel.find();
+    console.log('Retrieved all centrals:', centrals);
+    return centrals;
+  } catch (error) {
+    console.error('Error retrieving centrals:', error.message);
+    throw error;
+  }
 }
 
-export function findCentralByName(name: string) {
-  return CentralModel.findOne({ name });
+// Find a central by name
+export async function findCentralByName(name: string) {
+  try {
+    const central = await CentralModel.findOne({ name });
+    console.log('Central found by name:', central);
+    return central;
+  } catch (error) {
+    console.error('Error finding central by name:', error.message);
+    throw error;
+  }
 }
 
+// Get aggregated system status
 export async function getAggregatedSystemStatus() {
   const centrals = await CentralModel.find({ status: 'Active' });
   let aggregatedStatus = {
